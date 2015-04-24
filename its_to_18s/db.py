@@ -10,13 +10,24 @@ from .exceptions import UserError
 
 here = os.path.abspath(os.path.dirname(__file__))
 default_index_dir = os.path.join(here, "..", "indexes")
+if not os.path.exists(default_index_dir):
+    try:
+        os.mkdir(default_index_dir)
+    except OSError as e:
+        msg = ("Unable to create default index "
+               "directory `{}'. Specify your"
+               " own directory.")
+        print >> sys.stderr, str(e)
+        print >> sys.stderr, msg.format(default_index_dir)
+
 
 _available_dbs = OrderedDict()
 
 def available_dbs(datadir=default_index_dir):
     global _available_dbs
     if datadir not in _available_dbs:
-        paths = filter(os.path.isdir, os.listdir(datadir))
+        fulldirs = [ os.path.join(datadir, d) for d in os.listdir(datadir) ]
+        paths = filter(os.path.isdir, fulldirs)
         _available_dbs[datadir] = OrderedDict([
             (os.path.basename(bigpath), os.path.abspath(bigpath))
             for bigpath in paths

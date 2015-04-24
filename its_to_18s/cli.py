@@ -2,7 +2,7 @@ import sys
 import logging
 
 from . import (
-    index, taxlookup, download, db
+    index, taxlookup, db
 )
 
 
@@ -37,7 +37,7 @@ def main():
 
     subcommand = sys.argv[1]
     if subcommand not in subcommand_map:
-        print "`%s' is not a recognized command. Try `help'"%(subcommand)
+        print >> sys.stderr, "`%s' is not a recognized command. Try `help'"%(subcommand)
         return 1
     else:
         logging.basicConfig(format="%(asctime)s %(levelname)s: %(message)s")
